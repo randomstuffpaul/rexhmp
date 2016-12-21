@@ -15,10 +15,14 @@
 extern struct sys_timer exynos4_timer;
 
 void exynos_init_io(struct map_desc *mach_desc, int size);
+void exynos_register_audss_clocks(void);
+void exynos3_init_irq(void);
 void exynos4_init_irq(void);
 void exynos5_init_irq(void);
+void exynos3_restart(char mode, const char *cmd);
 void exynos4_restart(char mode, const char *cmd);
 void exynos5_restart(char mode, const char *cmd);
+int exynos_is_finish_map_io(void);
 
 #ifdef CONFIG_ARCH_EXYNOS4
 void exynos4_register_clocks(void);
@@ -30,12 +34,19 @@ void exynos4_setup_clocks(void);
 #endif
 
 #ifdef CONFIG_ARCH_EXYNOS5
-void exynos5_register_clocks(void);
-void exynos5_setup_clocks(void);
-
+void exynos5250_register_clocks(void);
+void exynos5410_register_clocks(void);
+void exynos5260_register_clocks(void);
+void exynos5250_setup_clocks(void);
+void exynos5410_setup_clocks(void);
+void exynos5260_setup_clocks(void);
 #else
-#define exynos5_register_clocks()
-#define exynos5_setup_clocks()
+#define exynos5250_register_clocks()
+#define exynos5410_register_clocks()
+#define exynos5260_register_clocks()
+#define exynos5250_setup_clocks()
+#define exynos5410_setup_clocks()
+#define exynos5260_setup_clocks()
 #endif
 
 #ifdef CONFIG_CPU_EXYNOS4210

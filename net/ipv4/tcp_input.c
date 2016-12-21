@@ -4524,7 +4524,11 @@ static void tcp_data_queue_ofo(struct sock *sk, struct sk_buff *skb)
 		 * to avoid future tcp_collapse_ofo_queue(),
 		 * probably the most expensive function in tcp stack.
 		 */
+#ifdef CONFIG_MACH_REX5260
+		if (skb->len <= skb_tailroom(skb1) && !tcp_hdr(skb)->fin && !skb_cloned(skb1)) {
+#else
 		if (skb->len <= skb_tailroom(skb1) && !tcp_hdr(skb)->fin) {
+#endif
 			NET_INC_STATS_BH(sock_net(sk),
 					 LINUX_MIB_TCPRCVCOALESCE);
 			BUG_ON(skb_copy_bits(skb, 0,

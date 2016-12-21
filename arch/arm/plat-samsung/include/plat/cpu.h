@@ -37,12 +37,15 @@ extern unsigned long samsung_cpu_id;
 #define S5PV210_CPU_ID		0x43110000
 #define S5PV210_CPU_MASK	0xFFFFF000
 
+
 #define EXYNOS4210_CPU_ID	0x43210000
 #define EXYNOS4212_CPU_ID	0x43220000
 #define EXYNOS4412_CPU_ID	0xE4412200
-#define EXYNOS4_CPU_MASK	0xFFFE0000
+#define EXYNOS4_CPU_MASK	0xFFFFF000
 
 #define EXYNOS5250_SOC_ID	0x43520000
+#define EXYNOS5260_SOC_ID	0xE5260000
+#define EXYNOS5410_SOC_ID	0xE5410000
 #define EXYNOS5_SOC_MASK	0xFFFFF000
 
 #define IS_SAMSUNG_CPU(name, id, mask)		\
@@ -62,6 +65,8 @@ IS_SAMSUNG_CPU(exynos4210, EXYNOS4210_CPU_ID, EXYNOS4_CPU_MASK)
 IS_SAMSUNG_CPU(exynos4212, EXYNOS4212_CPU_ID, EXYNOS4_CPU_MASK)
 IS_SAMSUNG_CPU(exynos4412, EXYNOS4412_CPU_ID, EXYNOS4_CPU_MASK)
 IS_SAMSUNG_CPU(exynos5250, EXYNOS5250_SOC_ID, EXYNOS5_SOC_MASK)
+IS_SAMSUNG_CPU(exynos5260, EXYNOS5260_SOC_ID, EXYNOS5_SOC_MASK)
+IS_SAMSUNG_CPU(exynos5410, EXYNOS5410_SOC_ID, EXYNOS5_SOC_MASK)
 
 #if defined(CONFIG_CPU_S3C2410) || defined(CONFIG_CPU_S3C2412) || \
     defined(CONFIG_CPU_S3C2416) || defined(CONFIG_CPU_S3C2440) || \
@@ -108,11 +113,18 @@ IS_SAMSUNG_CPU(exynos5250, EXYNOS5250_SOC_ID, EXYNOS5_SOC_MASK)
 # define soc_is_exynos4210()	0
 #endif
 
+#define EXYNOS4210_REV_0	(0x0)
+#define EXYNOS4210_REV_1_0	(0x10)
+#define EXYNOS4210_REV_1_1	(0x11)
+
 #if defined(CONFIG_SOC_EXYNOS4212)
 # define soc_is_exynos4212()	is_samsung_exynos4212()
 #else
 # define soc_is_exynos4212()	0
 #endif
+
+#define EXYNOS4212_REV_0       (0x0)
+#define EXYNOS4212_REV_1_0     (0x10)
 
 #if defined(CONFIG_SOC_EXYNOS4412)
 # define soc_is_exynos4412()	is_samsung_exynos4412()
@@ -120,15 +132,43 @@ IS_SAMSUNG_CPU(exynos5250, EXYNOS5250_SOC_ID, EXYNOS5_SOC_MASK)
 # define soc_is_exynos4412()	0
 #endif
 
-#define EXYNOS4210_REV_0	(0x0)
-#define EXYNOS4210_REV_1_0	(0x10)
-#define EXYNOS4210_REV_1_1	(0x11)
+#define EXYNOS4412_REV_0       (0x0)
+#define EXYNOS4412_REV_0_1     (0x01)
+#define EXYNOS4412_REV_1_0     (0x10)
+#define EXYNOS4412_REV_1_1     (0x11)
+#define EXYNOS4412_REV_2_0     (0x20)
 
 #if defined(CONFIG_SOC_EXYNOS5250)
 # define soc_is_exynos5250()	is_samsung_exynos5250()
 #else
 # define soc_is_exynos5250()	0
 #endif
+
+#if defined(CONFIG_SOC_EXYNOS5260)
+# define soc_is_exynos5260()	is_samsung_exynos5260()
+#else
+# define soc_is_exynos5260()	0
+#endif
+
+#define EXYNOS5260_REV_0	(0x0)
+#define EXYNOS5260_REV_1_0	(0x10)
+
+#if defined(CONFIG_SOC_EXYNOS5410)
+# define soc_is_exynos5410()	is_samsung_exynos5410()
+#else
+# define soc_is_exynos5410()	0
+#endif
+
+#define EXYNOS5410_REV_0	(0x0)
+#define EXYNOS5410_REV_1_0	(0x10)
+#define EXYNOS5410_REV_2_0	(0x20)
+#define EXYNOS5410_REV_2_3	(0x23)
+
+extern unsigned int samsung_chip_id[2];
+
+#define CHIPID0_OFFSET		(0x14)
+#define CHIPID1_OFFSET		(0x18)
+#define CHIPID_SIZE		(12)
 
 #define IODESC_ENT(x) { (unsigned long)S3C24XX_VA_##x, __phys_to_pfn(S3C24XX_PA_##x), S3C24XX_SZ_##x, MT_DEVICE }
 
@@ -137,6 +177,30 @@ IS_SAMSUNG_CPU(exynos5250, EXYNOS5250_SOC_ID, EXYNOS5_SOC_MASK)
 #endif
 
 #define print_mhz(m) ((m) / MHZ), (((m) / 1000) % 1000)
+
+/* cpu boot mode flag */
+#define RESET		(1 << 0)
+#define SECONDARY_RESET	(1 << 1)
+#define HOTPLUG		(1 << 2)
+#define C2_STATE	(1 << 3)
+#define CORE_SWITCH	(1 << 4)
+#define WAIT_FOR_OB_L2FLUSH (1 << 5)
+#define CHECK_CCI_SNOOP (1 << 7)
+
+#ifdef CONFIG_EXYNOS5_CCI
+#define SWITCH		CORE_SWITCH
+#else
+#define SWITCH		(CORE_SWITCH | WAIT_FOR_OB_L2FLUSH)
+#endif
+
+#define BOOT_MODE_MASK	0x1f
+
+extern void set_boot_flag(unsigned int cpu, unsigned int mode);
+extern void clear_boot_flag(unsigned int cpu, unsigned int mode);
+
+/* check & clear state of GICD_IGROUP0 */
+extern unsigned int read_gic_flag(unsigned int cpu);
+extern void clear_gic_flag(unsigned int cpu);
 
 /* forward declaration */
 struct s3c24xx_uart_resources;
@@ -202,7 +266,9 @@ extern struct bus_type s3c2443_subsys;
 extern struct bus_type s3c6410_subsys;
 extern struct bus_type s5p64x0_subsys;
 extern struct bus_type s5pv210_subsys;
+extern struct bus_type exynos3_subsys;
 extern struct bus_type exynos4_subsys;
+extern struct bus_type exynos5_subsys;
 
 extern void (*s5pc1xx_idle)(void);
 

@@ -22,7 +22,14 @@
  */
 ENTRY(exynos4_secondary_startup)
 	mrc	p15, 0, r0, c0, c0, 5
+#ifdef CONFIG_EXYNOS5_MP
+	ubfx	r1, r0, #8, #4
+#endif
 	and	r0, r0, #15
+#ifdef CONFIG_EXYNOS5_MP
+	add	r0, r0, r1, lsl #2
+	eor	r0, r0, #4
+#endif
 	adr	r4, 1f
 	ldmia	r4, {r5, r6}
 	sub	r4, r4, r5

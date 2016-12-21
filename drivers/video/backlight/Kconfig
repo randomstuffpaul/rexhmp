@@ -125,6 +125,79 @@ config LCD_AMS369FG06
 	  If you have an AMS369FG06 AMOLED Panel, say Y to enable its
 	  LCD control driver.
 
+config LCD_MIPI_S6E8AB0
+	tristate "1280 X 800 S6E8AB0 AMOLED MIPI LCD Driver"
+	depends on BACKLIGHT_CLASS_DEVICE
+	default n
+	help
+	  If you have an S6E8AB0 MIPI LCD Panel, say Y to enable its
+	  LCD control driver.
+
+config LCD_MIPI_ZJ070NA
+        tristate "1024 X 600 ZJ070NA MIPI LCD Driver"
+        depends on BACKLIGHT_CLASS_DEVICE
+        default n
+        help
+          If you have an TC358764 MIPI LCD Panel, say Y to enable its
+          LCD control driver.
+
+config LCD_MIPI_TC358764
+        tristate "1280 X 800 TC358764 AMOLED MIPI LCD Driver"
+        depends on BACKLIGHT_CLASS_DEVICE
+        default n
+        help
+          If you have an TC358764 MIPI LCD Panel, say Y to enable its
+          LCD control driver.
+
+config LCD_MIPI_S6E8AA0
+	tristate "800 X 1280 S6E8AA0 AMOLED LCD Driver"
+	depends on BACKLIGHT_CLASS_DEVICE
+	default n
+	help
+	  If you have an LCD_MIPI_S6E8AA0 MIPI LCD Panel, say Y to enable its
+	  LCD control driver.
+
+config LCD_MIPI_S6E3FA0
+	tristate "1080 X 1920 S6E3FA0 AMOLED LCD Driver"
+	depends on BACKLIGHT_CLASS_DEVICE
+	default n
+	help
+	  If you have an LCD_MIPI_S6E3FA0 MIPI LCD Panel, say Y to enable its
+	  LCD control driver.
+
+config LCD_MIPI_NT35510
+	tristate "480 X 800 NT35510 LCD Driver"
+	depends on BACKLIGHT_CLASS_DEVICE
+	default n
+	help
+	  If you have an LCD_MIPI_NT35510 MIPI LCD Panel, say Y to enable its
+	  LCD control driver.
+
+if LCD_MIPI_NT35510
+choice
+	prompt "Select Board Revison for NT35510 LCD"
+
+config ESPRESSO_REV0_0
+	bool "Espresso Rev0.0"
+	help
+	  If you are using ESPRESSO REV0.0 board, Say Y to enable NT35510 LCD.
+
+config ESPRESSO_REV0_1
+	bool "Espresso Rev0.1"
+	help
+	  If you are using ESPRESSO REV0.1 board, Say Y to enable NT35510 LCD.
+
+endchoice
+endif
+
+
+config LCD_LMS501KF03
+	tristate "480 X 800  LMS501KF03 TFT LCD Driver(RGB I/F)"
+	default n
+	help
+	  If you have an LMS501KF03 AMOLED Panel, say Y to enable its
+	  LCD control driver.
+
 endif # LCD_CLASS_DEVICE
 
 #

@@ -1,0 +1,56 @@
+/*
+ * Copyright (c) 2012 Samsung Electronics Co., Ltd.
+ *              http://www.samsung.com
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+
+#ifndef __MACH_GPIO_REX5260_REV00_H
+#define __MACH_GPIO_REX5260_REV00_H __FILE__
+
+#include "gpio-exynos.h"
+
+#define GPIO_GPS_UART_RXD		EXYNOS5260_GPA0(0)
+#define GPIO_GPS_UART_TXD		EXYNOS5260_GPA0(1)
+#define GPIO_GPS_UART_CTS		EXYNOS5260_GPA0(2)
+#define GPIO_GPS_UART_RTS		EXYNOS5260_GPA0(3)
+
+#define GPIO_AP_RXD			EXYNOS5260_GPA1(0)
+#define GPIO_AP_TXD			EXYNOS5260_GPA1(1)
+#if 0
+#define GPIO_WLAN_SDIO_CLK		EXYNOS5260_GPC1(0)
+#define GPIO_WLAN_SDIO_CMD		EXYNOS5260_GPC1(1)
+#define GPIO_WLAN_SDIO_D0		EXYNOS5260_GPC1(2)
+#define GPIO_WLAN_SDIO_D1		EXYNOS5260_GPC1(3)
+#define GPIO_WLAN_SDIO_D2		EXYNOS5260_GPC1(4)
+#define GPIO_WLAN_SDIO_D3		EXYNOS5260_GPC1(5)
+
+
+#define GPIO_WLAN_HOST_WAKE		EXYNOS5260_GPX2(3) //EINT19
+#endif
+#define GPIO_BT_HOST_WAKE		EXYNOS5260_GPX2(6) //EINT22
+//#define GPIO_WLAN_EN			EXYNOS5260_GPC4(2)
+#define GPIO_BT_EN			EXYNOS5260_GPC4(3)
+#define GPIO_BT_WAKE			EXYNOS5260_GPC4(1)
+#define GPIO_BT_nRST			EXYNOS5260_GPC4(0)
+
+#define GPIO_BT_UART_RXD		EXYNOS5260_GPZ1(0)
+#define GPIO_BT_UART_TXD		EXYNOS5260_GPZ1(1)
+#define GPIO_BT_UART_CTS		EXYNOS5260_GPZ1(2)
+#define GPIO_BT_UART_RTS		EXYNOS5260_GPZ1(3)
+
+#define GPIO_AP_JTAG_NTRST		EXYNOS5260_ETC0(0)
+#define GPIO_AP_JTAG_TMS		EXYNOS5260_ETC0(1)
+#define GPIO_AP_JTAG_TCK		EXYNOS5260_ETC0(2)
+#define GPIO_AP_JTAG_DI			EXYNOS5260_ETC0(3)
+#define GPIO_AP_JTAG_DO			EXYNOS5260_ETC0(4)
+#define GPIO_GND			EXYNOS5260_ETC0(5)
+
+#define GPIO_AP_N_RST_IN		EXYNOS5260_ETC6(0)
+#define GPIO_XTAL_24MHZ_AP		EXYNOS5260_ETC6(1)
+#define GPIO_TP4002			EXYNOS5260_ETC6(2)
+#define GPIO_AP_JTAG_EXTRST		EXYNOS5260_ETC6(3)
+
+#endif

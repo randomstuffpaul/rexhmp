@@ -378,11 +378,11 @@ static void smsc95xx_set_multicast(struct net_device *netdev)
 	spin_lock_irqsave(&pdata->mac_cr_lock, flags);
 
 	if (dev->net->flags & IFF_PROMISC) {
-		netif_dbg(dev, drv, dev->net, "promiscuous mode enabled\n");
+		netif_info(dev, drv, dev->net, "promiscuous mode enabled\n");
 		pdata->mac_cr |= MAC_CR_PRMS_;
 		pdata->mac_cr &= ~(MAC_CR_MCPAS_ | MAC_CR_HPFILT_);
 	} else if (dev->net->flags & IFF_ALLMULTI) {
-		netif_dbg(dev, drv, dev->net, "receive all multicast enabled\n");
+		netif_info(dev, drv, dev->net, "receive all multicast enabled\n");
 		pdata->mac_cr |= MAC_CR_MCPAS_;
 		pdata->mac_cr &= ~(MAC_CR_PRMS_ | MAC_CR_HPFILT_);
 	} else if (!netdev_mc_empty(dev->net)) {
@@ -400,10 +400,10 @@ static void smsc95xx_set_multicast(struct net_device *netdev)
 				pdata->hash_lo |= mask;
 		}
 
-		netif_dbg(dev, drv, dev->net, "HASHH=0x%08X, HASHL=0x%08X\n",
+		netif_info(dev, drv, dev->net, "HASHH=0x%08X, HASHL=0x%08X\n",
 				   pdata->hash_hi, pdata->hash_lo);
 	} else {
-		netif_dbg(dev, drv, dev->net, "receive own packets only\n");
+		netif_info(dev, drv, dev->net, "receive own packets only\n");
 		pdata->mac_cr &=
 			~(MAC_CR_PRMS_ | MAC_CR_MCPAS_ | MAC_CR_HPFILT_);
 	}
@@ -440,11 +440,11 @@ static void smsc95xx_phy_update_flowcontrol(struct usbnet *dev, u8 duplex,
 		else
 			afc_cfg &= ~0xF;
 
-		netif_dbg(dev, link, dev->net, "rx pause %s, tx pause %s\n",
+		netif_info(dev, link, dev->net, "rx pause %s, tx pause %s\n",
 				   cap & FLOW_CTRL_RX ? "enabled" : "disabled",
 				   cap & FLOW_CTRL_TX ? "enabled" : "disabled");
 	} else {
-		netif_dbg(dev, link, dev->net, "half duplex\n");
+		netif_info(dev, link, dev->net, "half duplex\n");
 		flow = 0;
 		afc_cfg |= 0xF;
 	}
@@ -472,7 +472,7 @@ static int smsc95xx_link_reset(struct usbnet *dev)
 	lcladv = smsc95xx_mdio_read(dev->net, mii->phy_id, MII_ADVERTISE);
 	rmtadv = smsc95xx_mdio_read(dev->net, mii->phy_id, MII_LPA);
 
-	netif_dbg(dev, link, dev->net,
+	netif_info(dev, link, dev->net,
 		  "speed: %u duplex: %d lcladv: %04x rmtadv: %04x\n",
 		  ethtool_cmd_speed(&ecmd), ecmd.duplex, lcladv, rmtadv);
 
@@ -506,7 +506,7 @@ static void smsc95xx_status(struct usbnet *dev, struct urb *urb)
 	memcpy(&intdata, urb->transfer_buffer, 4);
 	le32_to_cpus(&intdata);
 
-	netif_dbg(dev, link, dev->net, "intdata: 0x%08X\n", intdata);
+	netif_info(dev, link, dev->net, "intdata: 0x%08X\n", intdata);
 
 	if (intdata & INT_ENP_PHY_INT_)
 		usbnet_defer_kevent(dev, EVENT_LINK_RESET);
@@ -545,7 +545,7 @@ static int smsc95xx_set_features(struct net_device *netdev,
 		return ret;
 	}
 
-	netif_dbg(dev, hw, dev->net, "COE_CR = 0x%08x\n", read_buf);
+	netif_info(dev, hw, dev->net, "COE_CR = 0x%08x\n", read_buf);
 	return 0;
 }
 
@@ -608,14 +608,14 @@ static void smsc95xx_init_mac_address(struct usbnet *dev)
 			dev->net->dev_addr) == 0) {
 		if (is_valid_ether_addr(dev->net->dev_addr)) {
 			/* eeprom values are valid so use them */
-			netif_dbg(dev, ifup, dev->net, "MAC address read from EEPROM\n");
+			netif_info(dev, ifup, dev->net, "MAC address read from EEPROM\n");
 			return;
 		}
 	}
 
 	/* no eeprom, or eeprom values are invalid. generate random MAC */
 	eth_hw_addr_random(dev->net);
-	netif_dbg(dev, ifup, dev->net, "MAC address set to random_ether_addr\n");
+	netif_info(dev, ifup, dev->net, "MAC address set to random_ether_addr\n");
 }
 
 static int smsc95xx_set_mac_address(struct usbnet *dev)
@@ -709,7 +709,7 @@ static int smsc95xx_phy_initialize(struct usbnet *dev)
 		PHY_INT_MASK_DEFAULT_);
 	mii_nway_restart(&dev->mii);
 
-	netif_dbg(dev, ifup, dev->net, "phy initialised successfully\n");
+	netif_info(dev, ifup, dev->net, "phy initialised successfully\n");
 	return 0;
 }
 
@@ -719,7 +719,7 @@ static int smsc95xx_reset(struct usbnet *dev)
 	u32 read_buf, write_buf, burst_cap;
 	int ret = 0, timeout;
 
-	netif_dbg(dev, ifup, dev->net, "entering smsc95xx_reset\n");
+	netif_info(dev, ifup, dev->net, "entering smsc95xx_reset\n");
 
 	write_buf = HW_CFG_LRST_;
 	ret = smsc95xx_write_reg(dev, HW_CFG, write_buf);
@@ -772,7 +772,7 @@ static int smsc95xx_reset(struct usbnet *dev)
 	if (ret < 0)
 		return ret;
 
-	netif_dbg(dev, ifup, dev->net,
+	netif_info(dev, ifup, dev->net,
 		  "MAC Address: %pM\n", dev->net->dev_addr);
 
 	ret = smsc95xx_read_reg(dev, HW_CFG, &read_buf);
@@ -781,7 +781,7 @@ static int smsc95xx_reset(struct usbnet *dev)
 		return ret;
 	}
 
-	netif_dbg(dev, ifup, dev->net,
+	netif_info(dev, ifup, dev->net,
 		  "Read Value from HW_CFG : 0x%08x\n", read_buf);
 
 	read_buf |= HW_CFG_BIR_;
@@ -798,7 +798,7 @@ static int smsc95xx_reset(struct usbnet *dev)
 		netdev_warn(dev->net, "Failed to read HW_CFG: %d\n", ret);
 		return ret;
 	}
-	netif_dbg(dev, ifup, dev->net,
+	netif_info(dev, ifup, dev->net,
 		  "Read Value from HW_CFG after writing HW_CFG_BIR_: 0x%08x\n",
 		  read_buf);
 
@@ -813,7 +813,7 @@ static int smsc95xx_reset(struct usbnet *dev)
 		dev->rx_urb_size = DEFAULT_FS_BURST_CAP_SIZE;
 	}
 
-	netif_dbg(dev, ifup, dev->net,
+	netif_info(dev, ifup, dev->net,
 		  "rx_urb_size=%ld\n", (ulong)dev->rx_urb_size);
 
 	ret = smsc95xx_write_reg(dev, BURST_CAP, burst_cap);
@@ -827,7 +827,7 @@ static int smsc95xx_reset(struct usbnet *dev)
 		netdev_warn(dev->net, "Failed to read BURST_CAP: %d\n", ret);
 		return ret;
 	}
-	netif_dbg(dev, ifup, dev->net,
+	netif_info(dev, ifup, dev->net,
 		  "Read Value from BURST_CAP after writing: 0x%08x\n",
 		  read_buf);
 
@@ -843,7 +843,7 @@ static int smsc95xx_reset(struct usbnet *dev)
 		netdev_warn(dev->net, "Failed to read BULK_IN_DLY: %d\n", ret);
 		return ret;
 	}
-	netif_dbg(dev, ifup, dev->net,
+	netif_info(dev, ifup, dev->net,
 		  "Read Value from BULK_IN_DLY after writing: 0x%08x\n",
 		  read_buf);
 
@@ -852,7 +852,7 @@ static int smsc95xx_reset(struct usbnet *dev)
 		netdev_warn(dev->net, "Failed to read HW_CFG: %d\n", ret);
 		return ret;
 	}
-	netif_dbg(dev, ifup, dev->net,
+	netif_info(dev, ifup, dev->net,
 		  "Read Value from HW_CFG: 0x%08x\n", read_buf);
 
 	if (turbo_mode)
@@ -875,7 +875,7 @@ static int smsc95xx_reset(struct usbnet *dev)
 		netdev_warn(dev->net, "Failed to read HW_CFG: %d\n", ret);
 		return ret;
 	}
-	netif_dbg(dev, ifup, dev->net,
+	netif_info(dev, ifup, dev->net,
 		  "Read Value from HW_CFG after writing: 0x%08x\n", read_buf);
 
 	write_buf = 0xFFFFFFFF;
@@ -891,7 +891,7 @@ static int smsc95xx_reset(struct usbnet *dev)
 		netdev_warn(dev->net, "Failed to read ID_REV: %d\n", ret);
 		return ret;
 	}
-	netif_dbg(dev, ifup, dev->net, "ID_REV = 0x%08x\n", read_buf);
+	netif_info(dev, ifup, dev->net, "ID_REV = 0x%08x\n", read_buf);
 
 	/* Configure GPIO pins as LED outputs */
 	write_buf = LED_GPIO_CFG_SPD_LED | LED_GPIO_CFG_LNK_LED |
@@ -949,7 +949,7 @@ static int smsc95xx_reset(struct usbnet *dev)
 	}
 
 	/* enable PHY interrupts */
-	read_buf |= INT_EP_CTL_PHY_INT_;
+	read_buf = INT_EP_CTL_PHY_INT_;
 
 	ret = smsc95xx_write_reg(dev, INT_EP_CTL, read_buf);
 	if (ret < 0) {
@@ -960,7 +960,7 @@ static int smsc95xx_reset(struct usbnet *dev)
 	smsc95xx_start_tx_path(dev);
 	smsc95xx_start_rx_path(dev);
 
-	netif_dbg(dev, ifup, dev->net, "smsc95xx_reset, return 0\n");
+	netif_info(dev, ifup, dev->net, "smsc95xx_reset, return 0\n");
 	return 0;
 }
 
@@ -1025,7 +1025,7 @@ static void smsc95xx_unbind(struct usbnet *dev, struct usb_interface *intf)
 {
 	struct smsc95xx_priv *pdata = (struct smsc95xx_priv *)(dev->data[0]);
 	if (pdata) {
-		netif_dbg(dev, ifdown, dev->net, "free pdata\n");
+		netif_info(dev, ifdown, dev->net, "free pdata\n");
 		kfree(pdata);
 		pdata = NULL;
 		dev->data[0] = 0;
@@ -1057,7 +1057,7 @@ static int smsc95xx_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
 		align_count = (4 - ((size + NET_IP_ALIGN) % 4)) % 4;
 
 		if (unlikely(header & RX_STS_ES_)) {
-			netif_dbg(dev, rx_err, dev->net,
+			netif_info(dev, rx_err, dev->net,
 				  "Error header=0x%08x\n", header);
 			dev->net->stats.rx_errors++;
 			dev->net->stats.rx_dropped++;
@@ -1075,7 +1075,7 @@ static int smsc95xx_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
 		} else {
 			/* ETH_FRAME_LEN + 4(CRC) + 2(COE) + 4(Vlan) */
 			if (unlikely(size > (ETH_FRAME_LEN + 12))) {
-				netif_dbg(dev, rx_err, dev->net,
+				netif_info(dev, rx_err, dev->net,
 					  "size err header=0x%08x\n", header);
 				return 0;
 			}

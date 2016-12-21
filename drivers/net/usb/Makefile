@@ -2,6 +2,7 @@
 # Makefile for USB Network drivers
 #
 
+obj-$(CONFIG_USB_NET_SMSC9514)  += smsc9500/
 obj-$(CONFIG_USB_CATC)		+= catc.o
 obj-$(CONFIG_USB_KAWETH)	+= kaweth.o
 obj-$(CONFIG_USB_PEGASUS)	+= pegasus.o

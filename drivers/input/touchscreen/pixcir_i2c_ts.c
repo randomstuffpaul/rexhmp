@@ -57,11 +57,11 @@ static void pixcir_ts_poscheck(struct pixcir_i2c_ts_data *data)
 
 	touch = rdbuf[0];
 	if (touch) {
-		u16 posx1 = (rdbuf[3] << 8) | rdbuf[2];
 		u16 posy1 = (rdbuf[5] << 8) | rdbuf[4];
-		u16 posx2 = (rdbuf[7] << 8) | rdbuf[6];
+		u16 posx1 = (rdbuf[3] << 8) | rdbuf[2];
 		u16 posy2 = (rdbuf[9] << 8) | rdbuf[8];
-
+		u16 posx2 = (rdbuf[7] << 8) | rdbuf[6];
+		
 		input_report_key(tsdata->input, BTN_TOUCH, 1);
 		input_report_abs(tsdata->input, ABS_X, posx1);
 		input_report_abs(tsdata->input, ABS_Y, posy1);
@@ -133,6 +133,7 @@ static int __devinit pixcir_i2c_ts_probe(struct i2c_client *client,
 	struct input_dev *input;
 	int error;
 
+	dev_err(&client->dev, "%s] input->name=%s \n",__func__, client->name);
 	if (!pdata) {
 		dev_err(&client->dev, "platform data not defined\n");
 		return -EINVAL;
@@ -150,7 +151,8 @@ static int __devinit pixcir_i2c_ts_probe(struct i2c_client *client,
 	tsdata->input = input;
 	tsdata->chip = pdata;
 
-	input->name = client->name;
+	input->name = "ft5x06_ts";
+
 	input->id.bustype = BUS_I2C;
 	input->dev.parent = &client->dev;
 
@@ -166,7 +168,7 @@ static int __devinit pixcir_i2c_ts_probe(struct i2c_client *client,
 
 	error = request_threaded_irq(client->irq, NULL, pixcir_ts_isr,
 				     IRQF_TRIGGER_FALLING,
-				     client->name, tsdata);
+				     "ft5x06_ts", tsdata);
 	if (error) {
 		dev_err(&client->dev, "Unable to request touchscreen IRQ.\n");
 		goto err_free_mem;

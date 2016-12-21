@@ -93,21 +93,6 @@ static int smdk_hw_params(struct snd_pcm_substream *substream,
 	if (ret < 0)
 		return ret;
 
-	/* Set WM8580 to drive MCLK from its PLLA */
-	ret = snd_soc_dai_set_clkdiv(codec_dai, WM8580_MCLK,
-					WM8580_CLKSRC_PLLA);
-	if (ret < 0)
-		return ret;
-
-	ret = snd_soc_dai_set_pll(codec_dai, WM8580_PLLA, 0,
-					SMDK_WM8580_FREQ, pll_out);
-	if (ret < 0)
-		return ret;
-
-	ret = snd_soc_dai_set_sysclk(codec_dai, WM8580_CLKSRC_PLLA,
-				     pll_out, SND_SOC_CLOCK_IN);
-	if (ret < 0)
-		return ret;
 
 	return 0;
 }

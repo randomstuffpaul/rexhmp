@@ -1,0 +1,12 @@
+#
+# USB Network devices configuration
+#
+config USB_NET_SMSC9514
+	tristate "SMSC LAN9514 based USB 2.0 10/100 ethernet devices"
+	depends on USB_USBNET
+	select BITREVERSE
+	select CRC16
+	select CRC32
+	help
+	  This option adds support for SMSC LAN95XX based USB 2.0
+	  10/100 Ethernet adapters.
